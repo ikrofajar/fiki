@@ -27,7 +27,7 @@ async function ambilData() {
     let labels = data.map(d => new Date(d.Waktu).toLocaleTimeString());
     let tegangan = data.map(d => d.Tegangan);
     let arus = data.map(d => d.Arus);
-    let daya = data.map(d => d.daya);
+    let daya = data.map(d => d.Daya);
 
     updateChart(labels, tegangan, arus, daya);
 
