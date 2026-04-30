@@ -42,42 +42,37 @@ body {
   margin: 12px 0;
 }
 
-/* ===== SHEET MODAL ===== */
+/* ===== iOS SHEET ===== */
 .sheet {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.3);
-  backdrop-filter: blur(6px);
+  inset: 0;
+  background: rgba(0,0,0,0);
+  backdrop-filter: blur(0px);
   display: none;
+  transition: backdrop-filter 0.3s ease, background 0.3s ease;
+}
+
+.sheet.active {
+  display: block;
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(12px);
 }
 
 .sheet-content {
   position: absolute;
-  bottom: -100%;
+  bottom: 0;
   width: 100%;
   background: #fff;
   border-radius: 20px 20px 0 0;
   padding: 20px;
-  transition: 0.35s ease;
+  transform: translateY(100%);
+  will-change: transform;
 }
 
-/* handle (garis kecil atas) */
 .handle {
   width: 40px;
   height: 5px;
   background: #ccc;
   border-radius: 10px;
   margin: 0 auto 10px;
-}
-
-/* show */
-.sheet.active {
-  display: block;
-}
-
-.sheet.active .sheet-content {
-  bottom: 0;
 }
