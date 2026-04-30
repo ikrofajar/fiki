@@ -14,7 +14,6 @@
 </div>
 
 <div class="container">
-
   <div class="card" onclick="openModal('Tegangan')">
     <h3>Tegangan</h3>
     <div id="tegangan" class="value">0</div>
@@ -32,14 +31,13 @@
     <div id="daya" class="value">0</div>
     <div class="unit">Watt</div>
   </div>
-
 </div>
 
-<!-- MODAL -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2 id="modalTitle">Grafik</h2>
+<!-- iPhone style sheet modal -->
+<div id="sheet" class="sheet">
+  <div class="sheet-content" id="sheetContent">
+    <div class="handle"></div>
+    <h2 id="sheetTitle">Grafik</h2>
     <canvas id="modalChart"></canvas>
   </div>
 </div>
