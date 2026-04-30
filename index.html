@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Monitoring Listrik</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -14,24 +15,33 @@
 
 <div class="container">
 
-  <div class="card">
+  <div class="card" onclick="openModal('Tegangan')">
     <h3>Tegangan</h3>
     <div id="tegangan" class="value">0</div>
     <div class="unit">Volt</div>
   </div>
 
-  <div class="card">
+  <div class="card" onclick="openModal('Arus')">
     <h3>Arus</h3>
     <div id="arus" class="value">0</div>
     <div class="unit">Ampere</div>
   </div>
 
-  <div class="card">
+  <div class="card" onclick="openModal('Daya')">
     <h3>Daya</h3>
     <div id="daya" class="value">0</div>
     <div class="unit">Watt</div>
   </div>
 
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modalTitle">Grafik</h2>
+    <canvas id="modalChart"></canvas>
+  </div>
 </div>
 
 <script src="script.js"></script>
