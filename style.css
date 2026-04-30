@@ -4,9 +4,9 @@
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top, #0f172a, #020617);
-  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f5f7;
+  color: #1d1d1f;
 }
 
 /* HEADER */
@@ -14,88 +14,74 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px 40px;
-}
-
-.title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.icon {
-  width: 28px;
-  height: 28px;
-  fill: #38bdf8;
+  padding: 30px 40px;
 }
 
 .header h1 {
+  font-size: 24px;
+  font-weight: 500;
   margin: 0;
-  font-size: 26px;
 }
 
-/* STATUS */
 .status {
-  font-size: 14px;
-  color: #4ade80;
-  background: rgba(74, 222, 128, 0.1);
-  padding: 5px 12px;
-  border-radius: 10px;
+  font-size: 13px;
+  color: #6e6e73;
 }
 
 /* CONTAINER */
 .container {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 25px;
   padding: 40px;
   flex-wrap: wrap;
 }
 
 /* CARD */
 .card {
-  width: 230px;
+  width: 220px;
   padding: 30px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  background: #ffffff;
   text-align: center;
-  transition: 0.3s;
-  position: relative;
+  transition: 0.25s ease;
+  border: 1px solid #e5e5e7;
 }
 
-/* ICON CARD */
-.card-icon {
-  width: 30px;
-  height: 30px;
-  fill: #38bdf8;
-  margin-bottom: 10px;
-  opacity: 0.9;
-}
-
-/* HOVER */
+/* hover sangat halus */
 .card:hover {
-  transform: translateY(-8px) scale(1.03);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* TITLE */
+.card h3 {
+  margin: 0;
+  font-size: 14px;
+  color: #6e6e73;
+  font-weight: 500;
 }
 
 /* VALUE */
 .value {
-  font-size: 40px;
-  font-weight: bold;
-  margin: 10px 0;
-  color: #38bdf8;
-  text-shadow: 0 0 20px rgba(56,189,248,0.8);
+  font-size: 42px;
+  font-weight: 600;
+  margin: 12px 0;
+  letter-spacing: -1px;
 }
 
 /* UNIT */
 .unit {
   font-size: 13px;
-  opacity: 0.6;
+  color: #6e6e73;
 }
 
 /* RESPONSIVE */
 @media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+
   .card {
     width: 100%;
   }
