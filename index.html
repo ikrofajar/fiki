@@ -4,30 +4,33 @@
   <meta charset="UTF-8">
   <title>Monitoring Daya Lampu Otomatis</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<h1>Monitoring Listrik</h1>
+<div class="header">
+  <h1>⚡ Monitoring Listrik</h1>
+  <div class="status">● LIVE</div>
+</div>
 
 <div class="container">
   <div class="card">
     <h3>Tegangan</h3>
     <div id="tegangan" class="value">0</div>
+    <span class="unit">Volt</span>
   </div>
 
   <div class="card">
     <h3>Arus</h3>
     <div id="arus" class="value">0</div>
+    <span class="unit">Ampere</span>
   </div>
 
   <div class="card">
     <h3>Daya</h3>
     <div id="daya" class="value">0</div>
+    <span class="unit">Watt</span>
   </div>
 </div>
-
-<canvas id="chart"></canvas>
 
 <script src="script.js"></script>
 </body>
