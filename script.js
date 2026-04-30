@@ -3,12 +3,13 @@ const API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 
 let globalData = [];
 let modalChart;
+let currentType = "";
+let chartInterval;
 
-// animasi halus (Apple style)
+// update angka
 function smoothUpdate(id, value) {
   const el = document.getElementById(id);
   el.style.opacity = "0.5";
-
   setTimeout(() => {
     el.innerText = value.toFixed(2);
     el.style.opacity = "1";
@@ -20,8 +21,8 @@ async function ambilData() {
   try {
     let res = await fetch(`${SUPABASE_URL}?select=*&order=id.desc&limit=20`, {
       headers: {
-        "apikey": API_KEY,
-        "Authorization": "Bearer " + API_KEY
+        apikey: API_KEY,
+        Authorization: "Bearer " + API_KEY
       }
     });
 
@@ -31,7 +32,6 @@ async function ambilData() {
 
     if (data.length > 0) {
       let latest = data[data.length - 1];
-
       smoothUpdate("tegangan", latest.Tegangan);
       smoothUpdate("arus", latest.Arus);
       smoothUpdate("daya", latest.Daya);
@@ -39,30 +39,35 @@ async function ambilData() {
 
   } catch (err) {
     console.error(err);
-    document.querySelector(".status").innerText = "Offline";
   }
 }
 
 // buka modal
 function openModal(type) {
-  document.getElementById("modal").style.display = "block";
-  document.getElementById("modalTitle").innerText = "Grafik " + type;
+  currentType = type;
 
+  document.getElementById("sheet").classList.add("active");
+  document.getElementById("sheetTitle").innerText = type;
+
+  renderChart();
+
+  // auto update chart tiap 3 detik
+  chartInterval = setInterval(() => {
+    renderChart();
+  }, 3000);
+}
+
+// render chart
+function renderChart() {
   let labels = globalData.map(d =>
     new Date(d.Waktu).toLocaleTimeString()
   );
 
   let values;
+  if (currentType === "Tegangan") values = globalData.map(d => d.Tegangan);
+  if (currentType === "Arus") values = globalData.map(d => d.Arus);
+  if (currentType === "Daya") values = globalData.map(d => d.Daya);
 
-  if (type === "Tegangan") values = globalData.map(d => d.Tegangan);
-  if (type === "Arus") values = globalData.map(d => d.Arus);
-  if (type === "Daya") values = globalData.map(d => d.Daya);
-
-  renderChart(labels, values, type);
-}
-
-// render chart
-function renderChart(labels, data, label) {
   const ctx = document.getElementById("modalChart").getContext("2d");
 
   if (modalChart) modalChart.destroy();
@@ -70,33 +75,59 @@ function renderChart(labels, data, label) {
   modalChart = new Chart(ctx, {
     type: "line",
     data: {
-      labels: labels,
+      labels,
       datasets: [{
-        label: label,
-        data: data,
+        label: currentType,
+        data: values,
         borderColor: "#0071e3",
         backgroundColor: "rgba(0,113,227,0.1)",
         fill: true,
         tension: 0.4
       }]
-    },
-    options: {
-      plugins: {
-        legend: {
-          labels: {
-            color: "#333"
-          }
-        }
-      }
     }
   });
 }
 
+// ===== swipe gesture =====
+let startY = 0;
+const sheet = document.getElementById("sheetContent");
+
+sheet.addEventListener("touchstart", e => {
+  startY = e.touches[0].clientY;
+});
+
+sheet.addEventListener("touchmove", e => {
+  let currentY = e.touches[0].clientY;
+  let diff = currentY - startY;
+
+  if (diff > 0) {
+    sheet.style.transform = `translateY(${diff}px)`;
+  }
+});
+
+sheet.addEventListener("touchend", e => {
+  let endY = e.changedTouches[0].clientY;
+  let diff = endY - startY;
+
+  if (diff > 100) {
+    closeModal();
+  } else {
+    sheet.style.transform = `translateY(0)`;
+  }
+});
+
 // close modal
-document.querySelector(".close").onclick = function () {
-  document.getElementById("modal").style.display = "none";
+function closeModal() {
+  document.getElementById("sheet").classList.remove("active");
+  sheet.style.transform = `translateY(0)`;
+  clearInterval(chartInterval);
+}
+
+// klik background close
+document.getElementById("sheet").onclick = function(e) {
+  if (e.target.id === "sheet") closeModal();
 };
 
-// refresh tiap 3 detik
+// refresh utama
 setInterval(ambilData, 3000);
 ambilData();
