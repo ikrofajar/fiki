@@ -8,28 +8,49 @@
 <body>
 
 <div class="header">
-  <h1>⚡ Monitoring Listrik</h1>
-  <div class="status">● LIVE</div>
+  <div class="title">
+    <!-- ICON listrik -->
+    <svg class="icon" viewBox="0 0 24 24">
+      <path d="M13 2L3 14h7v8l10-12h-7z"/>
+    </svg>
+    <h1>Monitoring Listrik</h1>
+  </div>
+
+  <div class="status">● Live</div>
 </div>
 
 <div class="container">
+
   <div class="card">
+    <!-- ICON tegangan -->
+    <svg class="card-icon" viewBox="0 0 24 24">
+      <path d="M3 12h4l3-8 4 16 3-8h4"/>
+    </svg>
     <h3>Tegangan</h3>
     <div id="tegangan" class="value">0</div>
     <span class="unit">Volt</span>
   </div>
 
   <div class="card">
+    <!-- ICON arus -->
+    <svg class="card-icon" viewBox="0 0 24 24">
+      <path d="M12 2v20M5 7l7-5 7 5M5 17l7 5 7-5"/>
+    </svg>
     <h3>Arus</h3>
     <div id="arus" class="value">0</div>
     <span class="unit">Ampere</span>
   </div>
 
   <div class="card">
+    <!-- ICON daya -->
+    <svg class="card-icon" viewBox="0 0 24 24">
+      <path d="M11 3v10h4l-6 8v-10H5z"/>
+    </svg>
     <h3>Daya</h3>
     <div id="daya" class="value">0</div>
     <span class="unit">Watt</span>
   </div>
+
 </div>
 
 <script src="script.js"></script>
