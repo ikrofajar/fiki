@@ -6,17 +6,17 @@ let modalChart;
 let currentType = "";
 let chartInterval;
 
-// update angka
+// ===== UPDATE VALUE =====
 function smoothUpdate(id, value) {
   const el = document.getElementById(id);
   el.style.opacity = "0.5";
   setTimeout(() => {
     el.innerText = value.toFixed(2);
     el.style.opacity = "1";
-  }, 150);
+  }, 120);
 }
 
-// ambil data
+// ===== FETCH DATA =====
 async function ambilData() {
   try {
     let res = await fetch(`${SUPABASE_URL}?select=*&order=id.desc&limit=20`, {
@@ -42,22 +42,32 @@ async function ambilData() {
   }
 }
 
-// buka modal
+// ===== OPEN MODAL (SPRING) =====
+const sheet = document.getElementById("sheetContent");
+
 function openModal(type) {
   currentType = type;
 
-  document.getElementById("sheet").classList.add("active");
+  const modal = document.getElementById("sheet");
+  modal.classList.add("active");
+
   document.getElementById("sheetTitle").innerText = type;
 
-  renderChart();
+  sheet.style.transition = "none";
+  sheet.style.transform = "translateY(100%)";
 
-  // auto update chart tiap 3 detik
-  chartInterval = setInterval(() => {
-    renderChart();
-  }, 3000);
+  requestAnimationFrame(() => {
+    sheet.style.transition = "transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)";
+    sheet.style.transform = "translateY(0)";
+  });
+
+  if (navigator.vibrate) navigator.vibrate(10);
+
+  renderChart();
+  chartInterval = setInterval(renderChart, 3000);
 }
 
-// render chart
+// ===== RENDER CHART =====
 function renderChart() {
   let labels = globalData.map(d =>
     new Date(d.Waktu).toLocaleTimeString()
@@ -77,7 +87,6 @@ function renderChart() {
     data: {
       labels,
       datasets: [{
-        label: currentType,
         data: values,
         borderColor: "#0071e3",
         backgroundColor: "rgba(0,113,227,0.1)",
@@ -88,46 +97,69 @@ function renderChart() {
   });
 }
 
-// ===== swipe gesture =====
+// ===== GESTURE + INERTIA =====
 let startY = 0;
-const sheet = document.getElementById("sheetContent");
+let currentY = 0;
+let velocity = 0;
+let lastY = 0;
+let lastTime = 0;
 
 sheet.addEventListener("touchstart", e => {
   startY = e.touches[0].clientY;
+  lastY = startY;
+  lastTime = Date.now();
+  sheet.style.transition = "none";
 });
 
 sheet.addEventListener("touchmove", e => {
-  let currentY = e.touches[0].clientY;
+  currentY = e.touches[0].clientY;
   let diff = currentY - startY;
+
+  let now = Date.now();
+  velocity = (currentY - lastY) / (now - lastTime);
+
+  lastY = currentY;
+  lastTime = now;
 
   if (diff > 0) {
     sheet.style.transform = `translateY(${diff}px)`;
   }
 });
 
-sheet.addEventListener("touchend", e => {
-  let endY = e.changedTouches[0].clientY;
-  let diff = endY - startY;
+sheet.addEventListener("touchend", () => {
+  let diff = currentY - startY;
 
-  if (diff > 100) {
-    closeModal();
+  if (diff > 120 || velocity > 0.5) {
+    closeModal(true);
   } else {
-    sheet.style.transform = `translateY(0)`;
+    sheet.style.transition = "transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)";
+    sheet.style.transform = "translateY(0)";
   }
 });
 
-// close modal
-function closeModal() {
-  document.getElementById("sheet").classList.remove("active");
-  sheet.style.transform = `translateY(0)`;
+// ===== CLOSE MODAL =====
+function closeModal(haptic = false) {
+  const modal = document.getElementById("sheet");
+
+  sheet.style.transition = "transform 0.4s cubic-bezier(0.55, 0, 0.1, 1)";
+  sheet.style.transform = "translateY(100%)";
+
+  setTimeout(() => {
+    modal.classList.remove("active");
+  }, 300);
+
   clearInterval(chartInterval);
+
+  if (haptic && navigator.vibrate) {
+    navigator.vibrate([10, 20, 10]);
+  }
 }
 
 // klik background close
 document.getElementById("sheet").onclick = function(e) {
-  if (e.target.id === "sheet") closeModal();
+  if (e.target.id === "sheet") closeModal(true);
 };
 
-// refresh utama
+// refresh data
 setInterval(ambilData, 3000);
 ambilData();
